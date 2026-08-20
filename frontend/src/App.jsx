@@ -5,6 +5,7 @@ import Homepage from './pages/Homepage';
 import MyServers from './pages/MyServers';
 import MyProfile from './pages/MyProfile';
 import AddHost from './pages/AddHost';
+import EditHost from './pages/EditHost';
 import HostDetail from './pages/HostDetail';
 import './App.css';
 
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/servers" element={<MyServers />} />
           <Route path="/profile" element={<MyProfile />} />
           <Route path="/add-host" element={<AddHost />} />
+          <Route path="/edit-host/:id" element={<EditHost />} />
           <Route path="/host/:id" element={<HostDetail />} />
         </Route>
       </Routes>
