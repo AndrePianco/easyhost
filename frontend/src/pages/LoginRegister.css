@@ -275,3 +275,20 @@
   border: 1px solid rgba(255, 85, 85, 0.3);
   border-radius: 6px;
 }
+
+.login-lang-toggle {
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.login-lang-toggle:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}

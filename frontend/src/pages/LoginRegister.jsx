@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fazerLogin, cadastrarUsuario } from '../services/api';
+import { useLang } from '../context/LangContext';
 import './LoginRegister.css';
 
 export default function LoginRegister() {
   const navigate = useNavigate();
+  const { lang, toggle, t } = useLang();
 
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [registerData, setRegisterData] = useState({ email: '', password: '', confirmPassword: '' });
@@ -22,7 +24,6 @@ export default function LoginRegister() {
     setLoginLoading(true);
     try {
       const usuario = await fazerLogin(loginData);
-      // Salva o id do usuário no sessionStorage para as próximas requisições
       sessionStorage.setItem('userId', usuario.id);
       sessionStorage.setItem('userEmail', usuario.email);
       navigate('/home');
@@ -37,13 +38,12 @@ export default function LoginRegister() {
     e.preventDefault();
     setRegisterErro('');
     if (registerData.password !== registerData.confirmPassword) {
-      setRegisterErro('As senhas não coincidem!');
+      setRegisterErro(t('passwordMismatch'));
       return;
     }
     setRegisterLoading(true);
     try {
       await cadastrarUsuario({ email: registerData.email, password: registerData.password });
-      // Faz login automático após cadastro
       const usuario = await fazerLogin({ email: registerData.email, password: registerData.password });
       sessionStorage.setItem('userId', usuario.id);
       sessionStorage.setItem('userEmail', usuario.email);
@@ -76,129 +76,76 @@ export default function LoginRegister() {
           <span className="logo-easy">EASY</span>
           <span className="logo-host">HOST</span>
         </div>
-        <p className="login-subtitle">Gerencie seus servidores</p>
+        <p className="login-subtitle">{t('loginSubtitle')}</p>
+        {/* Language toggle on login page */}
+        <button className="login-lang-toggle" onClick={toggle}>
+          {lang === 'pt' ? '🇧🇷 PT' : '🇺🇸 EN'}
+        </button>
       </div>
 
       <div className="login-container">
         {/* Login Form */}
         <div className="login-form-card">
-          <h2 className="login-form-title">Entrar</h2>
+          <h2 className="login-form-title">{t('loginTitle')}</h2>
           <form onSubmit={handleLogin}>
             <div className="login-form-group">
-              <label className="login-form-label" htmlFor="login-email">Login</label>
+              <label className="login-form-label" htmlFor="login-email">{t('loginLabel')}</label>
               <div className="login-input-wrapper">
-                <input
-                  id="login-email"
-                  className="login-input"
-                  type="email"
-                  placeholder="fulano@gmail.com"
-                  value={loginData.email}
-                  onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                  required
-                />
+                <input id="login-email" className="login-input" type="email" placeholder="fulano@gmail.com"
+                  value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value })} required />
               </div>
             </div>
-
             <div className="login-form-group">
-              <label className="login-form-label" htmlFor="login-password">Senha</label>
+              <label className="login-form-label" htmlFor="login-password">{t('loginPassword')}</label>
               <div className="login-input-wrapper">
-                <input
-                  id="login-password"
-                  className="login-input"
-                  type={showLoginPass ? 'text' : 'password'}
-                  placeholder="••••••"
-                  value={loginData.password}
-                  onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                  required
-                />
-                <button
-                  type="button"
-                  className="login-input-toggle"
-                  onClick={() => setShowLoginPass(!showLoginPass)}
-                  aria-label="Toggle password visibility"
-                >
+                <input id="login-password" className="login-input" type={showLoginPass ? 'text' : 'password'} placeholder="••••••"
+                  value={loginData.password} onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} required />
+                <button type="button" className="login-input-toggle" onClick={() => setShowLoginPass(!showLoginPass)} aria-label="Toggle password visibility">
                   {showLoginPass ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
             </div>
-
             {loginErro && <p className="login-erro">{loginErro}</p>}
-
             <button type="submit" className="login-submit" id="btn-login" disabled={loginLoading}>
-              {loginLoading ? 'Entrando...' : 'Entrar'}
+              {loginLoading ? t('loginLoading') : t('loginBtn')}
             </button>
           </form>
         </div>
 
         {/* Register Form */}
         <div className="login-form-card">
-          <h2 className="login-form-title">Criar Conta</h2>
+          <h2 className="login-form-title">{t('registerTitle')}</h2>
           <form onSubmit={handleRegister}>
             <div className="login-form-group">
-              <label className="login-form-label" htmlFor="register-email">Login</label>
+              <label className="login-form-label" htmlFor="register-email">{t('loginLabel')}</label>
               <div className="login-input-wrapper">
-                <input
-                  id="register-email"
-                  className="login-input"
-                  type="email"
-                  placeholder="fulano@gmail.com"
-                  value={registerData.email}
-                  onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                  required
-                />
+                <input id="register-email" className="login-input" type="email" placeholder="fulano@gmail.com"
+                  value={registerData.email} onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })} required />
               </div>
             </div>
-
             <div className="login-form-group">
-              <label className="login-form-label" htmlFor="register-password">Senha</label>
+              <label className="login-form-label" htmlFor="register-password">{t('registerPassword')}</label>
               <div className="login-input-wrapper">
-                <input
-                  id="register-password"
-                  className="login-input"
-                  type={showRegPass ? 'text' : 'password'}
-                  placeholder="••••••"
-                  value={registerData.password}
-                  onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                  required
-                />
-                <button
-                  type="button"
-                  className="login-input-toggle"
-                  onClick={() => setShowRegPass(!showRegPass)}
-                  aria-label="Toggle password visibility"
-                >
+                <input id="register-password" className="login-input" type={showRegPass ? 'text' : 'password'} placeholder="••••••"
+                  value={registerData.password} onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })} required />
+                <button type="button" className="login-input-toggle" onClick={() => setShowRegPass(!showRegPass)} aria-label="Toggle password visibility">
                   {showRegPass ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
             </div>
-
             <div className="login-form-group">
-              <label className="login-form-label" htmlFor="register-confirm">Confirmar senha</label>
+              <label className="login-form-label" htmlFor="register-confirm">{t('registerConfirm')}</label>
               <div className="login-input-wrapper">
-                <input
-                  id="register-confirm"
-                  className="login-input"
-                  type={showRegConfirm ? 'text' : 'password'}
-                  placeholder="••••••"
-                  value={registerData.confirmPassword}
-                  onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
-                  required
-                />
-                <button
-                  type="button"
-                  className="login-input-toggle"
-                  onClick={() => setShowRegConfirm(!showRegConfirm)}
-                  aria-label="Toggle confirm password visibility"
-                >
+                <input id="register-confirm" className="login-input" type={showRegConfirm ? 'text' : 'password'} placeholder="••••••"
+                  value={registerData.confirmPassword} onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })} required />
+                <button type="button" className="login-input-toggle" onClick={() => setShowRegConfirm(!showRegConfirm)} aria-label="Toggle confirm password visibility">
                   {showRegConfirm ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
             </div>
-
             {registerErro && <p className="login-erro">{registerErro}</p>}
-
             <button type="submit" className="login-submit secondary" id="btn-register" disabled={registerLoading}>
-              {registerLoading ? 'Criando...' : 'Criar'}
+              {registerLoading ? t('registerLoading') : t('registerBtn')}
             </button>
           </form>
         </div>

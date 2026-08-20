@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { buscarHost, alternarStatus, excluirHost } from '../services/api';
+import { useLang } from '../context/LangContext';
 import './HostDetail.css';
+
 
 export default function HostDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLang();
   const [host, setHost] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
@@ -66,7 +69,7 @@ export default function HostDetail() {
   if (carregando) {
     return (
       <div className="host-detail">
-        <p style={{ color: 'var(--text-muted)', padding: '80px 0', textAlign: 'center' }}>Carregando...</p>
+        <p style={{ color: 'var(--text-muted)', padding: '80px 0', textAlign: 'center' }}>{t('loading')}</p>
       </div>
     );
   }
@@ -79,10 +82,10 @@ export default function HostDetail() {
             <line x1="19" y1="12" x2="5" y2="12"></line>
             <polyline points="12 19 5 12 12 5"></polyline>
           </svg>
-          Voltar
+          {t('back')}
         </button>
         <div style={{ textAlign: 'center', padding: '80px 0', color: 'var(--text-muted)' }}>
-          <p style={{ fontSize: '1.2rem' }}>{erro || 'Servidor não encontrado.'}</p>
+          <p style={{ fontSize: '1.2rem' }}>{erro || t('notFound')}</p>
         </div>
       </div>
     );
@@ -96,7 +99,7 @@ export default function HostDetail() {
           <line x1="19" y1="12" x2="5" y2="12"></line>
           <polyline points="12 19 5 12 12 5"></polyline>
         </svg>
-        Voltar
+        {t('back')}
       </button>
 
       {/* Hero */}
@@ -116,7 +119,7 @@ export default function HostDetail() {
             <h1 className="host-detail-hero-name">{host.name}</h1>
             <span className={`host-detail-hero-status ${host.status}`}>
               <span className="host-detail-hero-status-dot"></span>
-              {host.status === 'active' ? 'Ativo' : 'Inativo'}
+              {host.status === 'active' ? t('active') : t('inactive')}
             </span>
           </div>
         </div>
@@ -132,13 +135,13 @@ export default function HostDetail() {
               <line x1="12" y1="16" x2="12" y2="12"></line>
               <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>
-            Informações
+            {t('infoTitle')}
           </h2>
 
           {host.link && (
             <div className="host-detail-link-row">
               <div className="host-detail-link-info">
-                <span className="host-detail-row-label">Link / IP de conexão</span>
+                <span className="host-detail-row-label">{t('linkLabel')}</span>
                 <span className="host-detail-link-value">{host.link}</span>
               </div>
               <button
@@ -165,7 +168,7 @@ export default function HostDetail() {
           {host.notes && (
             <>
               <div className="host-detail-row" style={{ borderBottom: 'none', paddingBottom: '4px' }}>
-                <span className="host-detail-row-label">Observações</span>
+                <span className="host-detail-row-label">{t('notes')}</span>
               </div>
               <p className="host-detail-notes">{host.notes}</p>
             </>
@@ -180,7 +183,7 @@ export default function HostDetail() {
                 <circle cx="12" cy="12" r="3"></circle>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
               </svg>
-              Ações
+              {t('actionsTitle')}
             </h2>
 
             <div className="host-detail-actions">
@@ -196,14 +199,14 @@ export default function HostDetail() {
                       <rect x="6" y="4" width="4" height="16"></rect>
                       <rect x="14" y="4" width="4" height="16"></rect>
                     </svg>
-                    Desativar
+                    {t('deactivate')}
                   </>
                 ) : (
                   <>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polygon points="5 3 19 12 5 21 5 3"></polygon>
                     </svg>
-                    Ativar
+                    {t('activate')}
                   </>
                 )}
               </button>
@@ -217,7 +220,7 @@ export default function HostDetail() {
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-                Editar
+                {t('edit')}
               </button>
 
               <button
@@ -230,7 +233,7 @@ export default function HostDetail() {
                   <polyline points="3 6 5 6 21 6"></polyline>
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                 </svg>
-                Excluir
+                {t('delete')}
               </button>
             </div>
 
@@ -242,7 +245,7 @@ export default function HostDetail() {
                   <line x1="8" y1="2" x2="8" y2="6"></line>
                   <line x1="3" y1="10" x2="21" y2="10"></line>
                 </svg>
-                Criado em {formatDate(host.created_at)}
+                {t('createdAt')} {formatDate(host.created_at)}
               </div>
             </div>
           </div>
@@ -253,13 +256,13 @@ export default function HostDetail() {
       {showConfirm && (
         <div className="host-detail-confirm" onClick={() => setShowConfirm(false)}>
           <div className="host-detail-confirm-card" onClick={(e) => e.stopPropagation()}>
-            <h3 className="host-detail-confirm-title">Excluir servidor?</h3>
+            <h3 className="host-detail-confirm-title">{t('deleteServer')}</h3>
             <p className="host-detail-confirm-text">
-              O servidor <strong>{host.name}</strong> será removido permanentemente. Esta ação não pode ser desfeita.
+              <strong>{host.name}</strong> {t('deleteServerText')}
             </p>
             <div className="host-detail-confirm-actions">
               <button className="host-detail-action-btn edit" onClick={() => setShowConfirm(false)}>
-                Cancelar
+                {t('cancel')}
               </button>
               <button
                 className="host-detail-action-btn delete"
@@ -267,7 +270,7 @@ export default function HostDetail() {
                 disabled={actionLoading}
                 style={{ borderColor: 'var(--danger)', color: 'var(--danger)' }}
               >
-                {actionLoading ? 'Excluindo...' : 'Excluir'}
+                {actionLoading ? t('deleting') : t('delete')}
               </button>
             </div>
           </div>
