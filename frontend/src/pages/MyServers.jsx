@@ -69,6 +69,7 @@ export default function MyServers() {
             name={server.name}
             image={server.image}
             status={server.status}
+            onDeleted={(deletedId) => setServers((prev) => prev.filter((s) => s.id !== deletedId))}
           />
         ))}
 

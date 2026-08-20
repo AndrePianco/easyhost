@@ -165,3 +165,68 @@
   font-weight: 500;
   font-size: 0.95rem;
 }
+
+/* Confirm modal */
+.server-banner-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.server-banner-confirm-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 28px 32px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+}
+
+.server-banner-confirm-card h3 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.server-banner-confirm-card p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.server-banner-confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.server-banner-confirm-actions button {
+  padding: 8px 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.server-banner-confirm-actions button:hover {
+  background: var(--bg-hover);
+}
+
+.server-banner-confirm-actions button.danger {
+  border-color: #ff5555;
+  color: #ff5555;
+}
+
+.server-banner-confirm-actions button.danger:hover {
+  background: rgba(255, 85, 85, 0.12);
+}
+
