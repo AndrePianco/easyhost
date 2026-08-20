@@ -1,44 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ServerBanner from '../components/ServerBanner';
+import { listarHosts } from '../services/api';
 import './MyServers.css';
 
-const allServers = [
-  {
-    id: 1,
-    name: 'Minecraft',
-    image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1672970/header.jpg',
-    status: 'active',
-  },
-  {
-    id: 2,
-    name: 'Project Zomboid',
-    image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/108600/header.jpg',
-    status: 'active',
-  },
-  {
-    id: 3,
-    name: 'Palworld',
-    image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/header.jpg',
-    status: 'active',
-  },
-  {
-    id: 4,
-    name: 'Conan Exiles',
-    image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440900/header.jpg',
-    status: 'inactive',
-  },
-  {
-    id: 5,
-    name: 'GTA V FiveM',
-    image: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/header.jpg',
-    status: 'inactive',
-  },
-];
-
 export default function MyServers() {
+  const navigate = useNavigate();
+  const [servers, setServers] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState('');
 
-  const filteredServers = allServers.filter((server) => {
+  useEffect(() => {
+    // Redireciona se não estiver logado
+    if (!sessionStorage.getItem('userId')) {
+      navigate('/');
+      return;
+    }
+
+    listarHosts()
+      .then(setServers)
+      .catch((err) => setErro(err.message))
+      .finally(() => setCarregando(false));
+  }, [navigate]);
+
+  const filteredServers = servers.filter((server) => {
     if (filter === 'all') return true;
     return server.status === filter;
   });
@@ -73,7 +59,10 @@ export default function MyServers() {
       </div>
 
       <div className="servers-list">
-        {filteredServers.map((server) => (
+        {carregando && <p style={{ color: 'var(--text-muted)', padding: '40px 0' }}>Carregando servidores...</p>}
+        {erro && <p style={{ color: '#ff5555', padding: '40px 0' }}>{erro}</p>}
+
+        {!carregando && !erro && filteredServers.map((server) => (
           <ServerBanner
             key={server.id}
             id={server.id}
@@ -82,9 +71,10 @@ export default function MyServers() {
             status={server.status}
           />
         ))}
-        <ServerBanner isAddBanner />
 
-        {filteredServers.length === 0 && (
+        {!carregando && <ServerBanner isAddBanner />}
+
+        {!carregando && !erro && filteredServers.length === 0 && (
           <div className="servers-empty">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>

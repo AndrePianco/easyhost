@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fazerLogin, cadastrarUsuario } from '../services/api';
 import './LoginRegister.css';
 
 export default function LoginRegister() {
@@ -10,21 +11,48 @@ export default function LoginRegister() {
   const [showLoginPass, setShowLoginPass] = useState(false);
   const [showRegPass, setShowRegPass] = useState(false);
   const [showRegConfirm, setShowRegConfirm] = useState(false);
+  const [loginErro, setLoginErro] = useState('');
+  const [registerErro, setRegisterErro] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // TODO: integrate with backend
-    navigate('/home');
+    setLoginErro('');
+    setLoginLoading(true);
+    try {
+      const usuario = await fazerLogin(loginData);
+      // Salva o id do usuário no sessionStorage para as próximas requisições
+      sessionStorage.setItem('userId', usuario.id);
+      sessionStorage.setItem('userEmail', usuario.email);
+      navigate('/home');
+    } catch (err) {
+      setLoginErro(err.message);
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
+    setRegisterErro('');
     if (registerData.password !== registerData.confirmPassword) {
-      alert('As senhas não coincidem!');
+      setRegisterErro('As senhas não coincidem!');
       return;
     }
-    // TODO: integrate with backend
-    navigate('/home');
+    setRegisterLoading(true);
+    try {
+      await cadastrarUsuario({ email: registerData.email, password: registerData.password });
+      // Faz login automático após cadastro
+      const usuario = await fazerLogin({ email: registerData.email, password: registerData.password });
+      sessionStorage.setItem('userId', usuario.id);
+      sessionStorage.setItem('userEmail', usuario.email);
+      navigate('/home');
+    } catch (err) {
+      setRegisterErro(err.message);
+    } finally {
+      setRegisterLoading(false);
+    }
   };
 
   const EyeIcon = () => (
@@ -92,11 +120,12 @@ export default function LoginRegister() {
                   {showLoginPass ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
-              <span className="login-forgot">Esqueceu sua senha?</span>
             </div>
 
-            <button type="submit" className="login-submit" id="btn-login">
-              Entrar
+            {loginErro && <p className="login-erro">{loginErro}</p>}
+
+            <button type="submit" className="login-submit" id="btn-login" disabled={loginLoading}>
+              {loginLoading ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
         </div>
@@ -166,8 +195,10 @@ export default function LoginRegister() {
               </div>
             </div>
 
-            <button type="submit" className="login-submit secondary" id="btn-register">
-              Criar
+            {registerErro && <p className="login-erro">{registerErro}</p>}
+
+            <button type="submit" className="login-submit secondary" id="btn-register" disabled={registerLoading}>
+              {registerLoading ? 'Criando...' : 'Criar'}
             </button>
           </form>
         </div>

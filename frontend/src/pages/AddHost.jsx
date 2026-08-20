@@ -1,54 +1,33 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { criarHost } from '../services/api';
 import './AddHost.css';
 
 export default function AddHost() {
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
 
   const [form, setForm] = useState({
     name: '',
+    image: '',
     link: '',
     status: 'active',
     notes: '',
   });
-  const [preview, setPreview] = useState(null);
-  const [dragOver, setDragOver] = useState(false);
+  const [erro, setErro] = useState('');
+  const [carregando, setCarregando] = useState(false);
 
-  const handleImageChange = (file) => {
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErro('');
+    setCarregando(true);
+    try {
+      await criarHost(form);
+      navigate('/servers');
+    } catch (err) {
+      setErro(err.message);
+    } finally {
+      setCarregando(false);
     }
-  };
-
-  const handleFileInput = (e) => {
-    const file = e.target.files[0];
-    handleImageChange(file);
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    handleImageChange(file);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setDragOver(true);
-  };
-
-  const handleDragLeave = () => {
-    setDragOver(false);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // TODO: integrate with backend
-    console.log('Submitting:', { ...form, image: preview });
-    navigate('/servers');
   };
 
   return (
@@ -59,39 +38,6 @@ export default function AddHost() {
         </h1>
 
         <form onSubmit={handleSubmit}>
-          {/* Image Upload */}
-          <div
-            className={`addhost-upload ${dragOver ? 'drag-over' : ''}`}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onClick={() => fileInputRef.current?.click()}
-            role="button"
-            tabIndex={0}
-            id="upload-area"
-          >
-            {preview ? (
-              <img src={preview} alt="Preview" className="addhost-upload-preview" />
-            ) : (
-              <>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-                <span className="addhost-upload-text">Clique ou arraste uma imagem</span>
-                <span className="addhost-upload-hint">PNG, JPG ou WEBP (max. 5MB)</span>
-              </>
-            )}
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              onChange={handleFileInput}
-              tabIndex={-1}
-            />
-          </div>
-
           {/* Name */}
           <div className="addhost-form-group">
             <label className="addhost-label" htmlFor="host-name">Nome</label>
@@ -106,14 +52,36 @@ export default function AddHost() {
             />
           </div>
 
+          {/* Image URL */}
+          <div className="addhost-form-group">
+            <label className="addhost-label" htmlFor="host-image">URL da Imagem</label>
+            <input
+              id="host-image"
+              className="addhost-input"
+              type="url"
+              placeholder="https://exemplo.com/imagem.jpg"
+              value={form.image}
+              onChange={(e) => setForm({ ...form, image: e.target.value })}
+            />
+            {form.image && (
+              <img
+                src={form.image}
+                alt="Preview"
+                className="addhost-upload-preview"
+                style={{ marginTop: 12, borderRadius: 8, maxHeight: 160, width: '100%', objectFit: 'cover' }}
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            )}
+          </div>
+
           {/* Link */}
           <div className="addhost-form-group">
-            <label className="addhost-label" htmlFor="host-link">Link</label>
+            <label className="addhost-label" htmlFor="host-link">Link / IP de conexão</label>
             <input
               id="host-link"
               className="addhost-input"
-              type="url"
-              placeholder="https://..."
+              type="text"
+              placeholder="Ex: play.meuservidor.com:25565"
               value={form.link}
               onChange={(e) => setForm({ ...form, link: e.target.value })}
             />
@@ -160,8 +128,14 @@ export default function AddHost() {
             ></textarea>
           </div>
 
-          <button type="submit" className="addhost-submit" id="btn-save-host">
-            Salvar
+          {erro && (
+            <p style={{ color: '#ff5555', fontSize: '0.85rem', marginBottom: 12, padding: '8px 12px', background: 'rgba(255,85,85,0.1)', borderRadius: 6, border: '1px solid rgba(255,85,85,0.3)' }}>
+              {erro}
+            </p>
+          )}
+
+          <button type="submit" className="addhost-submit" id="btn-save-host" disabled={carregando}>
+            {carregando ? 'Salvando...' : 'Salvar'}
           </button>
           <button
             type="button"

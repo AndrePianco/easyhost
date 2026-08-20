@@ -1,19 +1,34 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { excluirConta } from '../services/api';
 import './MyProfile.css';
 
 export default function MyProfile() {
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(null); // 'logout' | 'delete' | null
+  const [loading, setLoading] = useState(false);
+
+  const email = sessionStorage.getItem('userEmail') || 'usuário';
 
   const handleLogout = () => {
-    // TODO: integrate with backend
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('userEmail');
     navigate('/');
   };
 
-  const handleDelete = () => {
-    // TODO: integrate with backend
-    navigate('/');
+  const handleDelete = async () => {
+    const userId = sessionStorage.getItem('userId');
+    setLoading(true);
+    try {
+      await excluirConta(userId);
+      sessionStorage.removeItem('userId');
+      sessionStorage.removeItem('userEmail');
+      navigate('/');
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,28 +43,14 @@ export default function MyProfile() {
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
           </div>
-          <button className="profile-avatar-edit" aria-label="Editar avatar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 20h9"></path>
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-            </svg>
-          </button>
         </div>
 
         {/* Info */}
-        <h2 className="profile-name">Seu Nome aqui</h2>
-        <p className="profile-email">fulano@gmail.com</p>
+        <h2 className="profile-name">{email.split('@')[0]}</h2>
+        <p className="profile-email">{email}</p>
 
         {/* Actions */}
         <div className="profile-actions">
-          <button className="profile-btn primary" id="btn-reset-password">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-            Redefinir senha
-          </button>
-
           <button
             className="profile-btn outline"
             onClick={() => setShowConfirm('logout')}
@@ -97,8 +98,9 @@ export default function MyProfile() {
               <button
                 className={`profile-btn ${showConfirm === 'delete' ? 'danger' : 'primary'}`}
                 onClick={showConfirm === 'logout' ? handleLogout : handleDelete}
+                disabled={loading}
               >
-                {showConfirm === 'logout' ? 'Sair' : 'Excluir'}
+                {loading ? 'Aguarde...' : showConfirm === 'logout' ? 'Sair' : 'Excluir'}
               </button>
             </div>
           </div>
