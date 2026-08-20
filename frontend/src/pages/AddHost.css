@@ -1,0 +1,281 @@
+.addhost-page {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--space-lg);
+  animation: fadeInUp 0.5s ease;
+}
+
+.addhost-card {
+  width: 100%;
+  max-width: 560px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  animation: scaleIn 0.5s ease;
+}
+
+.addhost-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+.addhost-title span {
+  color: var(--primary);
+}
+
+/* Upload Area */
+.addhost-upload {
+  width: 100%;
+  height: 160px;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  margin-bottom: var(--space-xl);
+  background: var(--bg-input);
+  position: relative;
+  overflow: hidden;
+}
+
+.addhost-upload:hover {
+  border-color: var(--primary);
+  background: var(--bg-hover);
+}
+
+.addhost-upload.drag-over {
+  border-color: var(--primary);
+  background: rgba(200, 230, 0, 0.1);
+  border-style: solid;
+}
+
+.addhost-upload svg {
+  width: 40px;
+  height: 40px;
+  color: var(--text-muted);
+  transition: color var(--transition-normal);
+}
+
+.addhost-upload:hover svg {
+  color: var(--primary);
+}
+
+.addhost-upload-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  transition: color var(--transition-normal);
+}
+
+.addhost-upload:hover .addhost-upload-text {
+  color: var(--text-secondary);
+}
+
+.addhost-upload-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.addhost-upload input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.addhost-upload-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+/* Form Fields */
+.addhost-form-group {
+  margin-bottom: var(--space-lg);
+}
+
+.addhost-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.addhost-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: all var(--transition-fast);
+}
+
+.addhost-input::placeholder {
+  color: var(--text-muted);
+}
+
+.addhost-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(200, 230, 0, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.addhost-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  min-height: 100px;
+  resize: vertical;
+  transition: all var(--transition-fast);
+}
+
+.addhost-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.addhost-textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(200, 230, 0, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Radio Buttons */
+.addhost-radio-group {
+  display: flex;
+  gap: var(--space-lg);
+  margin-top: var(--space-xs);
+}
+
+.addhost-radio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.addhost-radio input[type="radio"] {
+  display: none;
+}
+
+.addhost-radio-custom {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.addhost-radio input[type="radio"]:checked + .addhost-radio-custom {
+  border-color: var(--primary);
+}
+
+.addhost-radio input[type="radio"]:checked + .addhost-radio-custom::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.addhost-radio-label {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.addhost-radio input[type="radio"]:checked ~ .addhost-radio-label {
+  color: var(--primary);
+}
+
+/* Submit */
+.addhost-submit {
+  width: 100%;
+  margin-top: var(--space-lg);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-inverse);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.addhost-submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.addhost-submit:hover::before {
+  left: 100%;
+}
+
+.addhost-submit:hover {
+  box-shadow: var(--shadow-glow-strong);
+  transform: translateY(-2px);
+}
+
+.addhost-submit:active {
+  transform: translateY(0);
+}
+
+.addhost-cancel {
+  width: 100%;
+  margin-top: var(--space-sm);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.addhost-cancel:hover {
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+@media (max-width: 480px) {
+  .addhost-card {
+    padding: var(--space-xl);
+  }
+}

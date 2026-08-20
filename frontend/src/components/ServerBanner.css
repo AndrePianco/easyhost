@@ -1,0 +1,232 @@
+.server-banner {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  height: 90px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+}
+
+.server-banner:hover {
+  transform: translateX(6px);
+  box-shadow: var(--shadow-glow);
+  border-color: var(--border-focus);
+}
+
+.server-banner-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.4);
+  transition: all var(--transition-slow);
+}
+
+.server-banner:hover .server-banner-bg {
+  filter: brightness(0.5);
+  transform: scale(1.05);
+}
+
+.server-banner-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 var(--space-lg);
+}
+
+.server-banner-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.server-banner-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.server-banner-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.server-banner-status.active {
+  background: var(--status-active-bg);
+  color: var(--status-active);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.server-banner-status.inactive {
+  background: var(--status-inactive-bg);
+  color: var(--status-inactive);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.server-banner-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s infinite;
+}
+
+.server-banner-status.inactive .server-banner-status-dot {
+  animation: none;
+}
+
+.server-banner-actions {
+  display: flex;
+  gap: var(--space-sm);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.server-banner:hover .server-banner-actions {
+  opacity: 1;
+}
+
+.server-banner-action {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.server-banner-action:hover {
+  background: rgba(200, 230, 0, 0.2);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.server-banner-action svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Add Server Variant */
+.server-banner.add-banner {
+  border: 2px dashed var(--border-color);
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  justify-content: center;
+  height: 90px;
+}
+
+.server-banner.add-banner:hover {
+  border-color: var(--primary);
+  background: var(--bg-hover);
+  transform: translateX(0) scale(1.01);
+}
+
+.add-banner-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  color: var(--text-muted);
+  transition: color var(--transition-normal);
+}
+
+.server-banner.add-banner:hover .add-banner-content {
+  color: var(--primary);
+}
+
+.add-banner-content svg {
+  width: 24px;
+  height: 24px;
+}
+
+.add-banner-content span {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Confirm modal */
+.server-banner-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.server-banner-confirm-card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 28px 32px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+}
+
+.server-banner-confirm-card h3 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.server-banner-confirm-card p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.server-banner-confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.server-banner-confirm-actions button {
+  padding: 8px 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.server-banner-confirm-actions button:hover {
+  background: var(--bg-hover);
+}
+
+.server-banner-confirm-actions button.danger {
+  border-color: #ff5555;
+  color: #ff5555;
+}
+
+.server-banner-confirm-actions button.danger:hover {
+  background: rgba(255, 85, 85, 0.12);
+}
+
