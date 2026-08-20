@@ -19,6 +19,10 @@ const translations = {
     registerLoading: 'Criando...',
     loginSubtitle: 'Gerencie seus servidores',
     passwordMismatch: 'As senhas não coincidem!',
+    passwordTooShort: 'A senha deve ter pelo menos 8 caracteres.',
+    passwordNeedsUpper: 'A senha deve ter pelo menos uma letra maiúscula.',
+    passwordNeedsSpecial: 'A senha deve ter pelo menos um caractere especial (ex: !@#$%).',
+    loginWrongCredentials: 'E-mail ou senha incorretos.',
 
     // Homepage
     homeTitle: 'Meus hosts',
@@ -106,6 +110,10 @@ const translations = {
     registerLoading: 'Creating...',
     loginSubtitle: 'Manage your servers',
     passwordMismatch: 'Passwords do not match!',
+    passwordTooShort: 'Password must be at least 8 characters.',
+    passwordNeedsUpper: 'Password must contain at least one uppercase letter.',
+    passwordNeedsSpecial: 'Password must contain at least one special character (e.g. !@#$%).',
+    loginWrongCredentials: 'Incorrect email or password.',
 
     // Homepage
     homeTitle: 'My',

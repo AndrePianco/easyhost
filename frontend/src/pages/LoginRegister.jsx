@@ -28,7 +28,8 @@ export default function LoginRegister() {
       sessionStorage.setItem('userEmail', usuario.email);
       navigate('/home');
     } catch (err) {
-      setLoginErro(err.message);
+      // Garante mensagem amigável independente do que vier do servidor
+      setLoginErro(t('loginWrongCredentials'));
     } finally {
       setLoginLoading(false);
     }
@@ -37,6 +38,11 @@ export default function LoginRegister() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setRegisterErro('');
+
+    const pwd = registerData.password;
+    if (pwd.length < 8) { setRegisterErro(t('passwordTooShort')); return; }
+    if (!/[A-Z]/.test(pwd)) { setRegisterErro(t('passwordNeedsUpper')); return; }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) { setRegisterErro(t('passwordNeedsSpecial')); return; }
     if (registerData.password !== registerData.confirmPassword) {
       setRegisterErro(t('passwordMismatch'));
       return;
