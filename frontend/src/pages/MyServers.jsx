@@ -10,6 +10,7 @@ export default function MyServers() {
   const { t } = useLang();
   const [servers, setServers] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
 
@@ -25,8 +26,9 @@ export default function MyServers() {
   }, [navigate]);
 
   const filteredServers = servers.filter((server) => {
-    if (filter === 'all') return true;
-    return server.status === filter;
+    const matchesFilter = filter === 'all' || server.status === filter;
+    const matchesSearch = server.name.toLowerCase().includes(search.toLowerCase());
+    return matchesFilter && matchesSearch;
   });
 
   return (
@@ -34,6 +36,19 @@ export default function MyServers() {
       <div className="servers-header">
         <h1 className="servers-title">{t('serversTitle')}</h1>
         <div className="servers-filters">
+          <div className="servers-search-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="servers-search-icon">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              className="servers-search-input"
+              placeholder={t('searchPlaceholder')}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
           <button className={`servers-filter-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')} id="filter-all">{t('filterAll')}</button>
           <button className={`servers-filter-btn ${filter === 'active' ? 'active' : ''}`} onClick={() => setFilter('active')} id="filter-active">{t('filterActive')}</button>
           <button className={`servers-filter-btn ${filter === 'inactive' ? 'active' : ''}`} onClick={() => setFilter('inactive')} id="filter-inactive">{t('filterInactive')}</button>
