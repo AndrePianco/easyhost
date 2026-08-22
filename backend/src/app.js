@@ -10,7 +10,10 @@ import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
-app.use(cors());
+// Em produção, aceita apenas a origem do frontend (Vercel).
+// Em dev, aceita qualquer origem (FRONTEND_URL não está definida).
+const allowedOrigin = process.env.FRONTEND_URL || '*';
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 app.use(logger);
 
